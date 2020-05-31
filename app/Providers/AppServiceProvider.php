@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\User;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +24,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $user = User::where('ip',request()->ip())->first();
+        $login= null;
+        if($user){
+            $login = $user;
+        }
+
+        view()->share('login', $login);
     }
 }

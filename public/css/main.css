@@ -8,3 +8,6 @@ padding: 1px;
 margin: 1px;
 border: 1px solid #d0d0d0;
 }
+.pointer{
+    cursor: pointer;
+}

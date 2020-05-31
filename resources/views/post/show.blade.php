@@ -10,9 +10,11 @@
                         <div class="card mt-2">
                             <div class="card-body">
                                 @if ($post->type =="post")
-                                    <img src="{{ asset('images/'.$post->img)}}" class="card-img-top" alt="..." style="height: 300px;">
+                                    <img src="{{ asset('images/'.$post->img)}}" class="card-img-top" alt="..." style="height: 18rem;">
                                 @else
-                            <iframe width="100%" height="300px" src="https://www.youtube.com/embed/{{$post->lien}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    <iframe width="100%" height="18rem"
+                                        src={{$post->link."&output=embed"}}>
+                                    </iframe>
                                 @endif
                                 <h5 class="card-title">{{ $post->user->name}}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">{{ $post->created_at }}</h6>
@@ -20,23 +22,25 @@
                                 <p class="card-text">
                                     {{$post->description }}
                                     <br>
-                                    @if ($post->type =="post")
-                                    <a href="{{ $post->lien }}" target="_blank">قراءة المزيد</a>
-                                    @endif
+                                    {{-- <a href="{{ $post->lien }}" target="_blank">قراءة المزيد</a> --}}
                                 </p>
                                 <div class="row">
 
-                                    @if ($login != null)
-                                        @if ($login->id == $post->user_id || $login->is_admin == 1)
-                                            <div class="col">
-                                                <form action="{{ route('post.destroy',['post'=> $post])}}" method="POST">
-                                                    {{ method_field('DELETE') }}
-                                                    {{ csrf_field() }}
-                                                    <button class="btn btn-primary btn-block" type="submit" name="delete"><i class="fa fa-trash" aria-hidden="true"></i> حدف المنشور </button>
-                                                </form>
-                                            </div>
-                                        @endif
+                                        <div class="col-12">
+                                            <form action="{{ route('post.destroy',['post'=> $post])}}" method="POST">
+                                                {{ method_field('DELETE') }}
+                                                {{ csrf_field() }}
+                                                <button class="btn btn-primary btn-block" type="submit" name="delete"><i class="fa fa-trash" aria-hidden="true"></i> حدف المنشور </button>
+                                            </form>
+                                        </div>
 
+                                    @if($post->view >= 100)
+                                        <div class="col-12">
+                                            <form action="{{ route('post.publish',['post'=> $post])}}" method="POST">
+                                                {{ csrf_field() }}
+                                                <button class="btn btn-primary btn-block" type="submit" name="delete"><i class="fa fa-trash" aria-hidden="true"></i> إعادة نشر المنشور </button>
+                                            </form>
+                                        </div>
                                     @endif
 
 
@@ -45,17 +49,11 @@
                             </div>
                         </div>
                     </div>
-
                   @empty
                   <div class="col-12">
                       <p>لا يوجد اي مشاركة الان</p>
                   </div>
                   @endforelse
-
-
-            </div>
-            <div class="row text-center justify-content-center">
-                {{ $posts->links() }}
             </div>
           </div>
         </section>
@@ -88,7 +86,7 @@
                             <div class="input-group-prepend">
                               <span class="input-group-text" id="basic-addon1"> اسم مستعار</span>
                             </div>
-                            <input type="text" class="form-control" name="username" @if($login !=null ) disabled value={{ $login->name }} @endIf   aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="text" class="form-control" name="username" @if($login  !=null ) disabled value={{$login->name }} @endIf   aria-label="Username" aria-describedby="basic-addon1">
                           </div>
 
                         <div class="input-group mb-3 mt-2">
